@@ -1,0 +1,39 @@
+services:
+  osrm-prepare:
+    image: osrm/osrm-backend
+    volumes:
+      - osrm-data:/data
+      - ./osm:/osm  # Убедитесь, что в этой папке находится ваш central-fed-district-latest.osm.pbf файл
+    entrypoint: /bin/sh
+    command: 
+      - -c
+      - |
+        if [ ! -f /data/ready ]; then
+          osrm-extract -p /opt/car.lua /osm/central-fed-district-latest.osm.pbf &&
+          osrm-contract /osm/central-fed-district-latest.osrm &&
+          touch /data/ready
+        else
+          echo "Data already prepared, skipping extraction and contraction."
+        fi
+
+  osrm-routed:
+    image: osrm/osrm-backend
+    depends_on:
+      - osrm-prepare
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        while [ ! -f /data/ready ]; do
+          echo "Waiting for data preparation to complete..."
+          sleep 5
+        done
+        osrm-routed /osm/central-fed-district-latest.osrm
+    ports:
+      - "5000:5000"
+    volumes:
+      - osrm-data:/data
+      - ./osm:/osm  # Добавляем монтирование для доступа к файлам
+
+volumes:
+  osrm-data:
