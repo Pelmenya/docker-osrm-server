@@ -35,3 +35,9 @@ curl "http://localhost:5000/route/v1/driving/37.6173,55.7558;30.3158,59.9398?ove
 ```
 
 Это запросит маршрут от Москвы до Санкт-Петербурга.
+
+## Для пересборки данных из файла .osm.pbf, удаляем флаг /data/ready
+
+```bash
+docker-compose exec osrm-osrm-prepare-1 rm /data/ready
+```
