@@ -40,7 +40,7 @@ curl "http://localhost:5000/route/v1/driving/37.6173,55.7558;30.3158,59.9398?ove
 ## Для пересборки данных из файла `.osm.pbf`, удаляем флаг `/data/ready`
 
 ```bash
-docker-compose exec osrm-prepare rm /data/ready
+docker-compose exec osrm-prepare rm /osm/ready
 ```
 
 ## Использование мощной машины для подготовки данных и менее мощной для маршрутизации
@@ -65,9 +65,9 @@ docker-compose exec osrm-prepare rm /data/ready
 
    После того как вы перенесли все необходимые файлы OSRM на менее мощную машину, создайте пустой файл `ready` в директории `/data`, которая монтируется в контейнер для хранения данных. Это можно сделать с помощью команды:
 
-   ```bash
-   docker-compose exec osrm-prepare touch /path/to/mounted/data/ready
-   ```
+```bash
+touch /path/to/mounted/osm/ready
+```
 
    Затем на менее мощной машине запустите контейнер `osrm-routed`, используя скопированные файлы. Убедитесь, что все пути к файлам правильно настроены в вашем `docker-compose.yml` или в командной строке Docker.
 

@@ -8,10 +8,10 @@ services:
     command: 
       - -c
       - |
-        if [ ! -f /data/ready ]; then
+        if [ ! -f /osm/ready ]; then
           osrm-extract -p /opt/car.lua /osm/central-fed-district-latest.osm.pbf &&
           osrm-contract /osm/central-fed-district-latest.osrm &&
-          touch /data/ready
+          touch /osm/ready
         else
           echo "Data already prepared, skipping extraction and contraction."
         fi
@@ -24,7 +24,7 @@ services:
     command:
       - -c
       - |
-        while [ ! -f /data/ready ]; do
+        while [ ! -f /osm/ready ]; do
           echo "Waiting for data preparation to complete..."
           sleep 5
         done
